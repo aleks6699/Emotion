@@ -18,34 +18,45 @@ export const MobileList = ({
   handleTouchMove,
   handleTouchEnd,
 }: MobileListProps) => (
-  <div 
+  <div
+    role="list"
+    aria-label="Список емоцій"
     className="md:hidden space-y-4"
     onTouchMove={handleTouchMove}
     onTouchEnd={handleTouchEnd}
   >
     {emotions.map((emotion, index) => (
       <div
+        role="listitem"
+        aria-roledescription="Картка емоції"
         key={emotion.id}
         onTouchStart={(e) => handleTouchStart(index, e)}
-        className={`
-          relative transition-transform duration-200
+        className={`relative transition-transform duration-200
           ${activeIndex === index ? "scale-95 opacity-80 z-10" : ""}
           ${targetIndex === index ? "translate-y-12" : ""}
         `}
-        style={{ 
+        style={{
           animationDelay: `${index * 100}ms`,
-          touchAction: 'manipulation'
+          touchAction: "manipulation",
         }}
+        aria-describedby={`emotion-desc-${emotion.id}`}
       >
         {targetIndex === index && (
-          <div className="absolute -top-6 left-0 right-0 mx-auto w-16 h-1.5 bg-blue-500 rounded-full opacity-80"></div>
+          <div
+            className="absolute -top-6 left-0 right-0 mx-auto w-16 h-1.5 bg-blue-500 rounded-full opacity-80"
+            aria-hidden="true"
+          />
         )}
-        
-        <EmotionCard 
-          emotion={emotion} 
-          index={index} 
-          isDragging={activeIndex === index} 
+
+        <EmotionCard
+          emotion={emotion}
+          index={index}
+          isDragging={activeIndex === index}
         />
+
+        <span id={`emotion-desc-${emotion.id}`} className="sr-only">
+          Емоція {emotion.type.name}, коментар: {emotion.comment || "без коментаря"}.
+        </span>
       </div>
     ))}
   </div>

@@ -9,7 +9,7 @@ import { MobileList } from "@/components/MobileList";
 import { useTouchReorder } from "@/hooks/useTouchReorder";
 
 const EmotionBoard = observer(() => {
-  const emotions = emotionStore.filteredEmotions;
+  const emotions = emotionStore.allEmotions;
   const { activeIndex, targetIndex, handleTouchStart, handleTouchMove, handleTouchEnd } = useTouchReorder();
 
   if (emotions.length === 0) {

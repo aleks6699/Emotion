@@ -6,7 +6,7 @@ import { useEmotionStats } from "@/hooks/useEmotionStats";
 import { BarChart3 } from "lucide-react";
 import { observer } from "mobx-react-lite";
 
-export const Statistics = observer(() => {
+export const StatsPage = observer(() => {
   const { stats, totalEmotions, maxCount } = useEmotionStats();
 
   if (totalEmotions === 0) {
@@ -14,31 +14,30 @@ export const Statistics = observer(() => {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <section aria-label="Статистика емоцій" className="space-y-8">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <BarChart3 size={28} className="text-blue-600" />
+          <BarChart3 size={28} className="text-blue-600" aria-hidden="true" />
           <h2 className="text-2xl font-bold text-gray-800">Статистика</h2>
         </div>
         <PeriodFilter />
-      </div>
+      </header>
 
       <StatsSummary totalEmotions={totalEmotions} />
 
       <EmotionDistribution stats={stats} totalEmotions={totalEmotions} maxCount={maxCount} />
-    </div>
+    </section>
   );
 });
 
 const EmptyStatsState = () => (
-  <div className="text-center py-16">
-    <div className="text-6xl mb-6">📊</div>
+  <section aria-label="Повідомлення про відсутність статистики" className="text-center py-16">
+    <div role="img" aria-label="Іконка графіка" className="text-6xl mb-6">📊</div>
     <h3 className="text-2xl font-bold text-gray-700 mb-4">Немає даних для статистики</h3>
     <p className="text-gray-500 max-w-md mx-auto">
       Додайте кілька емоцій, щоб побачити статистику вашого емоційного стану
     </p>
-  </div>
+  </section>
 );
 
-
-export default Statistics;
+export default StatsPage;

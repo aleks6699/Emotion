@@ -41,28 +41,31 @@ class EmotionStore {
     }
   }
 
+  get initialized() {
+    return this.isInitialized;
+  }
+
   private setTimeOfDay() {
     const hour = new Date().getHours();
     this.timeOfDay = hour >= 6 && hour < 12 ? 'morning' :
-                    hour >= 12 && hour < 18 ? 'day' : 'evening';
+                     hour >= 12 && hour < 18 ? 'day' : 'evening';
   }
 
   get filteredEmotions(): Emotion[] {
-    if (!this.isInitialized) return [];
-
     const now = new Date();
     const filterMap: Record<FilterPeriod, Date> = {
       today: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-      week: new Date(now.setDate(now.getDate() - now.getDay())),
+      week: new Date(new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()).setHours(0, 0, 0, 0)),
       month: new Date(now.getFullYear(), now.getMonth(), 1)
     };
 
     return this.emotions
-      .filter(emotion => {
-        const emotionDate = new Date(emotion.timestamp);
-        return emotionDate >= filterMap[this.filterPeriod];
-      })
+      .filter(emotion => new Date(emotion.timestamp) >= filterMap[this.filterPeriod])
       .sort((a, b) => a.order - b.order);
+  }
+
+  get allEmotions(): Emotion[] {
+    return this.emotions.slice().sort((a, b) => a.order - b.order);
   }
 
   get emotionStats() {
@@ -93,12 +96,11 @@ class EmotionStore {
 
   reorderEmotions = (dragIndex?: number, dropIndex?: number) => {
     if (dragIndex !== undefined && dropIndex !== undefined) {
-      const filtered = this.filteredEmotions;
-      const dragged = filtered[dragIndex];
-      const arr = [...filtered];
+      const arr = this.allEmotions;
+      const dragged = arr[dragIndex];
       arr.splice(dragIndex, 1);
       arr.splice(dropIndex, 0, dragged);
-      
+
       arr.forEach((em, i) => {
         const original = this.emotions.find(e => e.id === em.id);
         if (original) original.order = i;
@@ -114,9 +116,17 @@ class EmotionStore {
     this.saveToStorage();
   };
 
-  openModal = () => this.isModalOpen = true;
-  closeModal = () => this.isModalOpen = false;
-  setFilterPeriod = (period: FilterPeriod) => this.filterPeriod = period;
+  openModal = () => {
+    this.isModalOpen = true;
+  };
+
+  closeModal = () => {
+    this.isModalOpen = false;
+  };
+
+  setFilterPeriod = (period: FilterPeriod) => {
+    this.filterPeriod = period;
+  };
 
   private saveToStorage() {
     safeLocalStorage.setItem('emotions', JSON.stringify(this.emotions));

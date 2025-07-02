@@ -43,7 +43,7 @@ export const AddEmotionModal = observer(() => {
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [emotionStore.isModalOpen]);
+  }, []);
 
   if (!emotionStore.isModalOpen) return null;
 
