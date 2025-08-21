@@ -1,16 +1,18 @@
 "use client";
+
 import React from "react";
 import { observer } from "mobx-react-lite";
-import { emotionStore } from "../stores/EmotionStore";
+import { emotionStore } from "@/stores/EmotionStore";
 import { BoardHeader } from "@/components/BoardHeader";
 import { DesktopGrid } from "@/components/DesktopGrid";
 import { EmptyBoard } from "@/components/EmptyBoard";
 import { MobileList } from "@/components/MobileList";
 import { useTouchReorder } from "@/hooks/useTouchReorder";
 
-const EmotionBoard = observer(() => {
+function EmotionBoardPage() {
   const emotions = emotionStore.allEmotions;
-  const { activeIndex, targetIndex, handleTouchStart, handleTouchMove, handleTouchEnd } = useTouchReorder();
+  const { activeIndex, targetIndex, handleTouchStart, handleTouchMove, handleTouchEnd } =
+    useTouchReorder();
 
   if (emotions.length === 0) {
     return <EmptyBoard />;
@@ -32,6 +34,6 @@ const EmotionBoard = observer(() => {
       />
     </div>
   );
-});
+}
 
-export default EmotionBoard;
+export default observer(EmotionBoardPage);
