@@ -6,7 +6,7 @@ import { useEmotionStats } from "@/hooks/useEmotionStats";
 import { BarChart3 } from "lucide-react";
 import { observer } from "mobx-react-lite";
 
-export const StatsPage = observer(() => {
+const StatsPage = observer(() => {
   const { stats, totalEmotions, maxCount } = useEmotionStats();
 
   if (totalEmotions === 0) {
